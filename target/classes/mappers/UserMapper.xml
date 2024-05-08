@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.ws.model.dao.UserDao">
+    <!-- 모든 사용자를 조회한다. selectAll은 DAO 인터페이스, UserDao 클래스의 메소드 이름과 일치시킨다. -->
+    <select id="selectAll" resultType="com.ssafy.ws.model.dto.UserDto">
+        SELECT * FROM user
+    </select>
+
+    <!-- 사용자의 userId로 검색하여 조회한다. selectOne은 DAO 인터페이스, UserDao 클래스의 메소드 이름과 일치시킨다. -->
+    <select id="selectOne" resultType="com.ssafy.ws.model.dto.UserDto">
+        SELECT * FROM user WHERE user_id = #{userId}
+    </select>
+	
+    <!-- 사용자를 추가한다. insert는 DAO 인터페이스, UserDao 클래스의 메소드 이름과 일치시킨다. -->
+    <insert id="insert" parameterType="com.ssafy.ws.model.dto.UserDto">
+        INSERT INTO user (loginId, password, name, phone, email, age, gender, nickName)
+        VALUES (#{loginId}, #{password}, #{name}, #{phone}, #{email}, #{age}, #{gender}, #{nickName})
+    </insert>
+
+    <!-- 사용자 정보를 수정한다. update는 DAO 인터페이스, UserDao 클래스의 메소드 이름과 일치시킨다. -->
+    <update id="update" parameterType="com.ssafy.ws.model.dto.UserDto">
+        UPDATE user
+        SET login_id=#{loginId}, password=#{password}, name=#{name}, phone=#{phone}, email=#{email}, age=#{age}, gender=#{gender}, nickName=#{nickName}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 사용자를 삭제한다. delete는 DAO 인터페이스, UserDao 클래스의 메소드 이름과 일치시킨다. -->
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM user 
+        WHERE user_id = #{userId}
+    </delete>
+    	
+	<!-- 사용자 로그인 -->
+	<select id="findByLoginIdAndPassword" resultType="com.ssafy.ws.model.dto.UserDto">
+	    SELECT * FROM user WHERE login_id = #{loginId} AND password = #{password}
+	</select>
+</mapper>

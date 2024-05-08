@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .nav-links {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-links">
+        <a href="/login.html">Login</a> | <a href="/register.html">Register</a>
+    </div>
+    <h1>Employee List</h1>
+    <table id="employeesTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Department</th>
+            </tr>
+        </thead>
+        <tbody>
+        
+        </tbody>
+    </table>
+    
+        <h1>User List</h1>
+    <table id="userTable">
+        <thead>
+            <tr>
+                <th>userId</th>
+                <th>loginId</th>
+                <th>password</th>
+                <th>name</th>
+                <th>phone</th>
+                <th>createdDate</th>
+                <th>age</th>
+                <th>gender</th>
+                <th>nickName</th>
+            </tr>
+        </thead>
+        <tbody>
+        
+        </tbody>
+    </table>
+
+    <script>
+    fetch('/employee')
+    .then(response => response.json())
+    .then(data => {
+        const tableBody = document.getElementById('employeesTable').getElementsByTagName('tbody')[0];
+        data.forEach(employee => {
+            const row = tableBody.insertRow();
+            row.insertCell(0).innerHTML = employee.id;
+            row.insertCell(1).innerHTML = employee.name;
+            row.insertCell(2).innerHTML = employee.position;
+            row.insertCell(3).innerHTML = employee.department;
+        });
+    })
+    .catch(error => console.error('Error loading the employees:', error));
+    
+	
+    
+    fetch('/user')
+    .then(response => response.json())
+    .then(data => {
+        const tableBody = document.getElementById('userTable').getElementsByTagName('tbody')[0];
+        data.forEach(user => { // 여기서 수정
+            const row = tableBody.insertRow();
+            row.insertCell(0).innerHTML = user.userId;
+            row.insertCell(1).innerHTML = user.loginId;
+            row.insertCell(2).innerHTML = user.password;
+            row.insertCell(3).innerHTML = user.name;
+            row.insertCell(4).innerHTML = user.phone;
+            row.insertCell(5).innerHTML = user.createdDate;
+            row.insertCell(6).innerHTML = user.age;
+            row.insertCell(7).innerHTML = user.gender;
+            row.insertCell(8).innerHTML = user.nickName;
+            // 나머지 셀들도 필요에 따라 추가하면 됩니다.
+        });
+    })
+    .catch(error => console.error('Error loading the users:', error));
+    
+    </script>
+</body>
+</html>

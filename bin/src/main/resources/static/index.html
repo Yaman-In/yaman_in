@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h1>Employee Management</h1>
+<h2>List Employees</h2>
+<button onclick="fetchEmployees()">Refresh Employee List</button>
+<table id="employeeTable">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Position</th>
+        <th>Department</th>
+    </tr>
+</table>
+
+<h2>Add/Update Employee</h2>
+<form id="employeeForm">
+    <input type="hidden" id="id" name="id">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+    <label for="position">Position:</label>
+    <input type="text" id="position" name="position" required><br><br>
+    <label for="department">Department:</label>
+    <input type="text" id="department" name="department" required><br><br>
+    <button type="button" onclick="addOrUpdateEmployee()">Submit</button>
+</form>
+
+<h2>Delete Employee</h2>
+<form id="deleteForm">
+    <label for="deleteId">Employee ID:</label>
+    <input type="text" id="deleteId" name="deleteId" required><br><br>
+    <button type="button" onclick="deleteEmployee()">Delete</button>
+</form>
+
+<script>
+    function fetchEmployees() {
+        fetch('/employee')
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById('employeeTable');
+                table.innerHTML = `
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Department</th>
+                    </tr>
+                `;
+                data.forEach(emp => {
+                    const row = table.insertRow(-1);
+                    row.insertCell(0).innerHTML = emp.id;
+                    row.insertCell(1).innerHTML = emp.name;
+                    row.insertCell(2).innerHTML = emp.position;
+                    row.insertCell(3).innerHTML = emp.department;
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function addOrUpdateEmployee() {
+        const id = document.getElementById('id').value;
+        const name = document.getElementById('name').value;
+        const position = document.getElementById('position').value;
+        const department = document.getElementById('department').value;
+
+        const url = id ? `/employee/${id}` : '/employee';
+        const method = id ? 'PUT' : 'POST';
+
+        fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id, name, position, department })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            fetchEmployees();
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function deleteEmployee() {
+        const id = document.getElementById('deleteId').value;
+
+        fetch(`/employee/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Delete successful:', data);
+            fetchEmployees();
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+</body>
+</html>
